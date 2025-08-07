@@ -13,7 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 // Configure multer for file uploads
 const upload = multer({
   dest: 'uploads/',
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
   fileFilter: (req, file, cb) => {
     if (!file) {
       return cb(null, true); // Allow no file

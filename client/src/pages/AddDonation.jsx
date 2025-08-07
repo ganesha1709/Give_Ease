@@ -259,7 +259,7 @@ export default function AddDonation() {
                         Click to upload or drag and drop
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-500">
-                        PNG, JPG, GIF up to 5MB
+                        PNG, JPG, GIF up to 20MB
                       </p>
                     </div>
                     <input
