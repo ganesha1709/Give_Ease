@@ -31,6 +31,10 @@ export function AuthProvider({ children }) {
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }) => {
       const response = await apiRequest('POST', '/api/auth/login', { email, password });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
+      }
       return response.json();
     },
     onSuccess: (data) => {

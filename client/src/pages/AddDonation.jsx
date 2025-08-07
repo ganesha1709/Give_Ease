@@ -156,8 +156,7 @@ export default function AddDonation() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto">
         <div className="space-y-2 mb-8">
           <h1 className="text-3xl font-bold">Add New Donation</h1>
           <p className="text-neutral dark:text-gray-300">
@@ -317,6 +316,5 @@ export default function AddDonation() {
           </CardContent>
         </Card>
       </div>
-    </div>
   );
 }

@@ -113,7 +113,7 @@ export default function Browse() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="space-y-8">
       <div className="space-y-2 mb-8">
         <h1 className="text-3xl font-bold">Browse Donations</h1>
         <p className="text-neutral dark:text-gray-300">
