@@ -3,6 +3,8 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Heart,
   Package,
@@ -15,14 +17,26 @@ import {
   Settings,
   LogOut,
   User,
-  ChevronRight
+  ChevronRight,
+  RefreshCw,
+  ChevronDown,
+  Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, login } = useAuth();
   const [location] = useLocation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const roleItems = [
     {
@@ -72,9 +86,56 @@ export default function Sidebar() {
     }
   ];
 
+  const switchRoleMutation = useMutation({
+    mutationFn: async (newRole) => {
+      const response = await fetch('/api/auth/select-role', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to switch role');
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      login(data, localStorage.getItem('token'));
+      queryClient.invalidateQueries();
+      toast({
+        title: 'Role Switched',
+        description: `You are now using the platform as a ${data.role}.`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Role Switch Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const handleRoleSwitch = (newRole: string) => {
+    if (newRole !== user?.role) {
+      switchRoleMutation.mutate(newRole);
+    }
+  };
+
   const handleLogout = () => {
     logout();
   };
+
+  const availableRoles = [
+    { value: 'donor', label: 'Donor', icon: Gift, description: 'Donate items to help others' },
+    { value: 'recipient', label: 'Recipient', icon: Heart, description: 'Receive donations from the community' },
+    { value: 'ngo', label: 'NGO', icon: Users, description: 'Connect with donors for your organization' },
+  ];
 
   const isActive = (href: string) => {
     return location === href || location.startsWith(href + '/');
@@ -115,9 +176,44 @@ export default function Sidebar() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{user?.firstName} {user?.lastName}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
-                  {user?.role}
-                </p>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-6 p-1 mt-1 justify-start">
+                      <Badge variant="secondary" className="text-xs capitalize mr-1">
+                        {user?.role || 'Member'}
+                      </Badge>
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56">
+                    <div className="px-2 py-1.5">
+                      <p className="text-xs text-gray-500">Switch Role</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    {availableRoles.map((role) => (
+                      <DropdownMenuItem
+                        key={role.value}
+                        onClick={() => handleRoleSwitch(role.value)}
+                        disabled={switchRoleMutation.isPending}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
+                        <role.icon className="h-4 w-4" />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm">{role.label}</span>
+                            {user?.role === role.value && (
+                              <Check className="h-3 w-3 text-green-600" />
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-500">{role.description}</p>
+                        </div>
+                        {switchRoleMutation.isPending && user?.role !== role.value && (
+                          <RefreshCw className="h-3 w-3 animate-spin" />
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>

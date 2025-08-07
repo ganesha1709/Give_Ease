@@ -149,6 +149,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile update endpoint
+  app.patch('/api/auth/update-profile', authenticateToken, async (req: any, res) => {
+    try {
+      const { firstName, lastName, phone, address } = req.body;
+      
+      const updateData = {};
+      if (firstName !== undefined) updateData.firstName = firstName;
+      if (lastName !== undefined) updateData.lastName = lastName;
+      if (phone !== undefined) updateData.phone = phone;
+      if (address !== undefined) updateData.address = address;
+
+      const updatedUser = await storage.updateUser(req.user.userId, updateData);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const { password, ...userResponse } = updatedUser;
+      res.json({ user: userResponse });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Item routes
   app.post('/api/items', authenticateToken, upload.single('image'), async (req: any, res) => {
     try {

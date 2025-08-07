@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import AddDonation from "./pages/AddDonation";
 import Browse from "./pages/Browse";
 import Admin from "./pages/Admin";
+import MyProfile from "./pages/MyProfile";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -36,6 +37,11 @@ function Router() {
       <Route path="/admin">
         <ProtectedRoute requiredRoles={['admin']}>
           <Admin />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/profile">
+        <ProtectedRoute>
+          <MyProfile />
         </ProtectedRoute>
       </Route>
       <Route component={NotFound} />
