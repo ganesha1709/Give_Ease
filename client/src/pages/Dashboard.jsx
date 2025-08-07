@@ -13,8 +13,12 @@ import {
   MapPin, 
   User,
   Image as ImageIcon,
-  Search
+  Search,
+  TrendingUp,
+  Users,
+  Gift
 } from 'lucide-react';
+import EnhancedDashboard from '@/components/EnhancedDashboard';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -27,6 +31,10 @@ export default function Dashboard() {
   const { data: myReceivedItems, isLoading: receivedLoading } = useQuery({
     queryKey: ['/api/items/my-received'],
     enabled: user?.role === 'recipient' || user?.role === 'ngo',
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ['/api/stats'],
   });
 
   const getBadgeColor = (level) => {

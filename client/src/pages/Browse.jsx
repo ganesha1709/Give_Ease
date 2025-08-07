@@ -12,6 +12,9 @@ import { Search, Filter, Heart, MapPin, Calendar, User } from 'lucide-react';
 export default function Browse() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [selectedCondition, setSelectedCondition] = useState('all');
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -67,9 +70,16 @@ export default function Browse() {
   ];
 
   const filteredItems = items.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
+    const matchesSearch = searchTerm === '' || 
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+    const matchesCondition = selectedCondition === 'all' || item.condition === selectedCondition;
+    const matchesLocation = selectedLocation === 'all' || 
+      (item.location && item.location.toLowerCase().includes(selectedLocation.toLowerCase()));
+    
+    return matchesSearch && matchesCategory && matchesCondition && matchesLocation;
   });
 
   const handleClaimItem = (itemId) => {
@@ -105,6 +115,17 @@ export default function Browse() {
     }
   };
 
+  const handleSuggestionClick = (suggestion, type) => {
+    if (type === 'search') {
+      setSearchTerm(suggestion);
+    } else if (type === 'category') {
+      setSelectedCategory(suggestion);
+    } else if (type === 'location') {
+      setSelectedLocation(suggestion);
+    }
+    setShowSuggestions(false);
+  };
+
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
@@ -121,33 +142,17 @@ export default function Browse() {
         </p>
       </div>
 
-      {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            placeholder="Search items..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="flex items-center space-x-2">
-          <Filter className="h-4 w-4 text-gray-400" />
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      {/* Advanced Search and Filters */}
+      <SearchAndFilter
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
+        selectedCondition={selectedCondition}
+        setSelectedCondition={setSelectedCondition}
+      />
 
       {/* Items Grid */}
       {isLoading ? (
@@ -168,94 +173,12 @@ export default function Browse() {
       ) : filteredItems.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
-            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
-              {item.imageUrl ? (
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-48 object-cover"
-                />
-              ) : (
-                <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">No image</span>
-                </div>
-              )}
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <Badge variant="secondary" className="capitalize">
-                    {item.category}
-                  </Badge>
-                  <Badge className="capitalize">
-                    {item.condition.replace('_', ' ')}
-                  </Badge>
-                </div>
-                
-                <h3 className="text-lg font-semibold mb-2 line-clamp-1">{item.title}</h3>
-                <p className="text-neutral dark:text-gray-300 text-sm mb-4 line-clamp-2">
-                  {item.description}
-                </p>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{formatDate(item.createdAt)}</span>
-                    </div>
-                    {item.location && (
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="h-3 w-3" />
-                        <span>{item.location}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                        <User className="text-white text-xs" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">
-                          {item.donor ? `${item.donor.firstName} ${item.donor.lastName[0]}.` : 'Unknown'}
-                        </span>
-                        {item.donor?.badgeLevel !== 'none' && (
-                          <Badge size="sm" className={getBadgeColor(item.donor.badgeLevel)}>
-                            {item.donor.badgeLevel}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-
-                    {item.status === 'claimed' ? (
-                      <Button size="sm" variant="secondary" disabled>
-                        <Heart className="mr-1 h-3 w-3" />
-                        Claimed
-                      </Button>
-                    ) : item.status === 'delivered' ? (
-                      <Button size="sm" variant="secondary" disabled>
-                        <Heart className="mr-1 h-3 w-3" />
-                        Delivered
-                      </Button>
-                    ) : isAuthenticated && (user?.role === 'recipient' || user?.role === 'ngo') ? (
-                      <Button
-                        size="sm"
-                        onClick={() => handleClaimItem(item.id)}
-                        disabled={claimItemMutation.isPending}
-                        className="bg-green-600 hover:bg-green-700"
-                      >
-                        <Heart className="mr-1 h-3 w-3" />
-                        {claimItemMutation.isPending ? 'Processing...' : 'Receive'}
-                      </Button>
-                    ) : (
-                      <Button size="sm" variant="secondary" disabled>
-                        <Heart className="mr-1 h-3 w-3" />
-                        Available
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ItemCard
+              key={item.id}
+              item={item}
+              onClaim={handleClaimItem}
+              isClaimPending={claimItemMutation.isPending}
+            />
           ))}
         </div>
       ) : (
