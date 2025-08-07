@@ -1,0 +1,632 @@
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiveEase - Simplify Giving, Amplify Impact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#059669',
+                        secondary: '#0284c7',
+                        accent: '#dc2626',
+                        neutral: '#64748b',
+                        'dark-bg': '#0f172a',
+                        'dark-surface': '#1e293b',
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            transition: all 0.3s ease;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .dark .glass-effect {
+            background: rgba(15, 23, 42, 0.8);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #059669, #0284c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .dark .card-hover:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    
+    <!-- @COMPONENT: Header [Navigation with theme toggle and user menu] -->
+    <header class="fixed top-0 w-full z-50 glass-effect border-b border-gray-200 dark:border-gray-700">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                    <i class="fas fa-heart text-white text-lg"></i>
+                </div>
+                <span class="text-2xl font-bold gradient-text">GiveEase</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-neutral dark:text-gray-300 hover:text-primary transition-colors">How it Works</a>
+                <a href="#" class="text-neutral dark:text-gray-300 hover:text-primary transition-colors">Browse Items</a>
+                <a href="#" class="text-neutral dark:text-gray-300 hover:text-primary transition-colors">NGO Partners</a>
+                <a href="#" class="text-neutral dark:text-gray-300 hover:text-primary transition-colors">Impact</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-moon dark:hidden text-gray-600"></i>
+                    <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                </button>
+                
+                <button class="px-4 py-2 text-primary hover:bg-primary hover:text-white border border-primary rounded-lg transition-all">
+                    Log In
+                </button>
+                <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                    Sign Up
+                </button>
+            </div>
+        </nav>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: Hero [Main landing section with CTAs] -->
+    <section class="pt-24 pb-16 bg-gradient-to-br from-gray-50 via-emerald-50 to-sky-50 dark:from-dark-bg dark:via-dark-surface dark:to-slate-800">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Verified & Trusted Platform
+                        </div>
+                        <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
+                            Simplify <span class="gradient-text">Giving</span>,<br>
+                            Amplify <span class="gradient-text">Impact</span>
+                        </h1>
+                        <p class="text-xl text-neutral dark:text-gray-300 leading-relaxed">
+                            Connect verified donors with recipients and NGOs. Transform unused items into meaningful impact through our secure, transparent donation platform.
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="px-8 py-4 bg-primary text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all transform hover:scale-105">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            Start Donating
+                        </button>
+                        <button class="px-8 py-4 border-2 border-primary text-primary rounded-xl font-semibold hover:bg-primary hover:text-white transition-all">
+                            <i class="fas fa-search mr-2"></i>
+                            Browse Items
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-8 pt-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary" data-bind="stats.totalDonations">12,847</div>
+                            <div class="text-sm text-neutral">Items Donated</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary" data-bind="stats.verifiedUsers">3,421</div>
+                            <div class="text-sm text-neutral">Verified Users</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary" data-bind="stats.ngoPartners">127</div>
+                            <div class="text-sm text-neutral">NGO Partners</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <!-- Hero illustration placeholder with donation items -->
+                    <div class="bg-white dark:bg-dark-surface rounded-3xl p-8 shadow-2xl">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-emerald-100 dark:bg-emerald-900/30 rounded-xl p-4 text-center">
+                                <i class="fas fa-tshirt text-primary text-2xl mb-2"></i>
+                                <div class="text-sm font-medium">Clothes</div>
+                            </div>
+                            <div class="bg-blue-100 dark:bg-blue-900/30 rounded-xl p-4 text-center">
+                                <i class="fas fa-laptop text-secondary text-2xl mb-2"></i>
+                                <div class="text-sm font-medium">Electronics</div>
+                            </div>
+                            <div class="bg-orange-100 dark:bg-orange-900/30 rounded-xl p-4 text-center">
+                                <i class="fas fa-book text-orange-600 text-2xl mb-2"></i>
+                                <div class="text-sm font-medium">Books</div>
+                            </div>
+                            <div class="bg-purple-100 dark:bg-purple-900/30 rounded-xl p-4 text-center">
+                                <i class="fas fa-couch text-purple-600 text-2xl mb-2"></i>
+                                <div class="text-sm font-medium">Furniture</div>
+                            </div>
+                            <div class="bg-pink-100 dark:bg-pink-900/30 rounded-xl p-4 text-center">
+                                <i class="fas fa-puzzle-piece text-pink-600 text-2xl mb-2"></i>
+                                <div class="text-sm font-medium">Toys</div>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-900/30 rounded-xl p-4 text-center">
+                                <i class="fas fa-utensils text-green-600 text-2xl mb-2"></i>
+                                <div class="text-sm font-medium">Kitchen</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Hero -->
+
+    <!-- @COMPONENT: HowItWorks [Process explanation section] -->
+    <section class="py-20 bg-white dark:bg-dark-surface">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">How <span class="gradient-text">GiveEase</span> Works</h2>
+                <p class="text-xl text-neutral dark:text-gray-300 max-w-2xl mx-auto">
+                    Our streamlined process ensures secure, verified donations reach those who need them most
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center space-y-4">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-user-check text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Get Verified</h3>
+                    <p class="text-neutral dark:text-gray-300">
+                        Upload your ID for quick verification. Our secure process ensures all users are authentic and trustworthy.
+                    </p>
+                    <div class="text-sm text-primary font-medium">ID Verification • Admin Approval • Role Selection</div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="text-center space-y-4">
+                    <div class="w-20 h-20 bg-gradient-to-br from-secondary to-blue-400 rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-exchange-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Give or Receive</h3>
+                    <p class="text-neutral dark:text-gray-300">
+                        List items you want to donate or browse available donations. Our matching system connects the right people.
+                    </p>
+                    <div class="text-sm text-secondary font-medium">Smart Matching • Category Filters • Location-Based</div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="text-center space-y-4">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent to-red-400 rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-heart text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Track Impact</h3>
+                    <p class="text-neutral dark:text-gray-300">
+                        See your donation's journey with proof of delivery. Earn badges and certificates for your contributions.
+                    </p>
+                    <div class="text-sm text-accent font-medium">Delivery Proof • Achievement Badges • Impact Certificates</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HowItWorks -->
+
+    <!-- @COMPONENT: FeaturedDonations [Recent donation showcase] -->
+    <section class="py-20 bg-gray-50 dark:bg-dark-bg">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Recent <span class="gradient-text">Donations</span></h2>
+                <p class="text-xl text-neutral dark:text-gray-300">
+                    See the latest items shared by our generous community
+                </p>
+            </div>
+            
+            <!-- @MAP: featuredItems.map(item => ( -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Featured Item 1 -->
+                <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-lg card-hover overflow-hidden">
+                    <!-- Mock image of winter clothing donations -->
+                    <img src="https://pixabay.com/get/g12f1f2dd84165248f0f3a0af8c11730fc4d43cea0bd15256e10111e287a44bf52576b6b13d76d1b50207bfab57600c7eab658406ac5da89f7323dbe8610f1ae4_1280.jpg" 
+                         alt="Winter clothing donation" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-flex items-center px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 text-sm font-medium rounded-full">
+                                <i class="fas fa-tshirt mr-1"></i>
+                                Clothes
+                            </span>
+                            <span class="text-green-600 font-medium text-sm">Available</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2" data-bind="item.title">Winter Clothing Bundle</h3>
+                        <p class="text-neutral dark:text-gray-300 text-sm mb-4" data-bind="item.description">
+                            Warm jackets, sweaters, and accessories in excellent condition. Perfect for families in need.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium" data-bind="item.donor">Sarah K.</span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                </div>
+                            </div>
+                            <span class="text-xs text-neutral">2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Featured Item 2 -->
+                <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-lg card-hover overflow-hidden">
+                    <!-- Mock image of electronics donation -->
+                    <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" 
+                         alt="Electronics donation including laptop and tablet" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-flex items-center px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 text-sm font-medium rounded-full">
+                                <i class="fas fa-laptop mr-1"></i>
+                                Electronics
+                            </span>
+                            <span class="text-orange-600 font-medium text-sm">Claimed</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2" data-bind="item.title">Student Tech Package</h3>
+                        <p class="text-neutral dark:text-gray-300 text-sm mb-4" data-bind="item.description">
+                            Laptop, tablet, and accessories for students. All items tested and working perfectly.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                                    <i class="fas fa-building text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium" data-bind="item.donor">TechCorp NGO</span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                </div>
+                            </div>
+                            <span class="text-xs text-neutral">1 week ago</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Featured Item 3 -->
+                <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-lg card-hover overflow-hidden">
+                    <!-- Mock image of children's books and educational materials -->
+                    <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" 
+                         alt="Collection of children's books and educational materials" class="w-full h-48 object-cover" data-mock-image="true">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-flex items-center px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 text-sm font-medium rounded-full">
+                                <i class="fas fa-book mr-1"></i>
+                                Books
+                            </span>
+                            <span class="text-green-600 font-medium text-sm">Available</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2" data-bind="item.title">Children's Library Set</h3>
+                        <p class="text-neutral dark:text-gray-300 text-sm mb-4" data-bind="item.description">
+                            50+ children's books, educational materials, and activity books. Great for libraries or schools.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium" data-bind="item.donor">Michael R.</span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                </div>
+                            </div>
+                            <span class="text-xs text-neutral">3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_MAP )) -->
+            
+            <div class="text-center mt-12">
+                <button class="px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-emerald-700 transition-colors">
+                    View All Donations
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: FeaturedDonations -->
+
+    <!-- @COMPONENT: Gamification [Badges and rewards showcase] -->
+    <section class="py-20 bg-white dark:bg-dark-surface">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Earn <span class="gradient-text">Recognition</span></h2>
+                <p class="text-xl text-neutral dark:text-gray-300">
+                    Get rewarded for your generosity with badges, certificates, and community recognition
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- Bronze Badge -->
+                <div class="text-center p-8 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-2xl">
+                    <div class="w-24 h-24 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-medal text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-orange-600 mb-2">Bronze Giver</h3>
+                    <p class="text-orange-700 dark:text-orange-300 mb-4">1-4 successful donations</p>
+                    <div class="text-sm text-neutral dark:text-gray-300">
+                        Start your giving journey and make your first impact in the community
+                    </div>
+                </div>
+                
+                <!-- Silver Badge -->
+                <div class="text-center p-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/20 dark:to-gray-600/20 rounded-2xl">
+                    <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-award text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-600 mb-2">Silver Champion</h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">5-9 successful donations</p>
+                    <div class="text-sm text-neutral dark:text-gray-300">
+                        Become a regular contributor and inspire others to give back
+                    </div>
+                </div>
+                
+                <!-- Gold Badge -->
+                <div class="text-center p-8 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-2xl">
+                    <div class="w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-crown text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-yellow-600 mb-2">Gold Hero</h3>
+                    <p class="text-yellow-700 dark:text-yellow-300 mb-4">10+ successful donations</p>
+                    <div class="text-sm text-neutral dark:text-gray-300">
+                        Join the elite circle of community heroes making lasting change
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 text-center">
+                <h3 class="text-2xl font-bold mb-4">Digital Certificates</h3>
+                <p class="text-neutral dark:text-gray-300 mb-6">
+                    Receive downloadable PDF certificates for each donation. Share your impact on social media and build your giving portfolio.
+                </p>
+                <button class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                    <i class="fas fa-download mr-2"></i>
+                    Sample Certificate
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Gamification -->
+
+    <!-- @COMPONENT: RoleBasedCTA [Different CTAs for different user types] -->
+    <section class="py-20 bg-gradient-to-br from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Choose Your <span class="gradient-text">Role</span></h2>
+                <p class="text-xl text-neutral dark:text-gray-300">
+                    Whether you're giving, receiving, or representing an organization - there's a place for you
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Donor Role -->
+                <div class="bg-white dark:bg-dark-surface rounded-2xl p-8 shadow-lg card-hover">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-hand-holding-heart text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-primary">I Want to Donate</h3>
+                        <p class="text-neutral dark:text-gray-300 mt-2">Share your unused items with those who need them</p>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-3"></i>
+                            <span>List items easily</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-3"></i>
+                            <span>Track delivery status</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-3"></i>
+                            <span>Earn recognition badges</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-3"></i>
+                            <span>Get impact certificates</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 bg-primary text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                        Start Donating
+                    </button>
+                </div>
+                
+                <!-- Recipient Role -->
+                <div class="bg-white dark:bg-dark-surface rounded-2xl p-8 shadow-lg card-hover">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-hands text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-secondary">I Need Items</h3>
+                        <p class="text-neutral dark:text-gray-300 mt-2">Find items that can help improve your situation</p>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-3"></i>
+                            <span>Browse verified donations</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-3"></i>
+                            <span>Smart matching system</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-3"></i>
+                            <span>Direct communication</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-3"></i>
+                            <span>Secure verification</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 bg-secondary text-white rounded-lg hover:bg-sky-700 transition-colors">
+                        Browse Items
+                    </button>
+                </div>
+                
+                <!-- NGO Role -->
+                <div class="bg-white dark:bg-dark-surface rounded-2xl p-8 shadow-lg card-hover">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-building text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-accent">NGO Partner</h3>
+                        <p class="text-neutral dark:text-gray-300 mt-2">Scale your impact by connecting with our community</p>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-3"></i>
+                            <span>Bulk donation management</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-3"></i>
+                            <span>Priority matching</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-3"></i>
+                            <span>Impact reporting</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-3"></i>
+                            <span>Verification support</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 bg-accent text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Partner With Us
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: RoleBasedCTA -->
+
+    <!-- @COMPONENT: Footer [Contact info and links] -->
+    <footer class="bg-dark-bg text-gray-300">
+        <div class="container mx-auto px-4 py-16">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-heart text-white text-lg"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-white">GiveEase</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-md">
+                        Connecting verified donors with recipients and NGOs to create meaningful impact through secure, transparent donations.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-facebook-f text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-twitter text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-linkedin-in text-white"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-primary transition-colors">How it Works</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Browse Items</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">NGO Partners</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Safety & Trust</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Impact Stories</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-primary transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Community Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400">© 2024 GiveEase. All rights reserved.</p>
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <span class="text-gray-400 text-sm">Secured with SSL</span>
+                    <i class="fas fa-shield-alt text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // Theme toggle functionality
+        (function() {
+            function toggleTheme() {
+                const html = document.documentElement;
+                const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                html.classList.remove(currentTheme);
+                html.classList.add(newTheme);
+                html.setAttribute('data-theme', newTheme);
+                
+                // Store preference
+                localStorage.setItem('theme', newTheme);
+            }
+            
+            // Initialize theme from localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.classList.add(savedTheme);
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Make toggleTheme available globally
+            window.toggleTheme = toggleTheme;
+        })();
+
+        // TODO: Implement React Router for navigation
+        // TODO: Implement authentication state management
+        // TODO: Implement role-based dashboard routing
+        // TODO: Implement file upload for item images
+        // TODO: Implement real-time donation status updates
+        // TODO: Implement search and filter functionality
+        // TODO: Implement donation matching algorithm
+        // TODO: Implement gamification point system
+        // TODO: Implement PDF certificate generation
+        // TODO: Implement admin panel functionality
+        // TODO: Implement proof of delivery upload
+    </script>
+</body>
+</html>
