@@ -35,16 +35,17 @@ Preferred communication style: Simple, everyday language.
 - **Relationships**: Foreign key relationships between users, items, and delivery proofs
 
 ### Authentication & Authorization
-- **User Verification**: Multi-step process including email verification and admin approval
+- **User Registration**: Immediate access after account creation and role selection
 - **Role-Based Access**: Five user roles with different permissions and dashboard access
-- **ID Verification**: Planned OCR-based ID verification using Tesseract.js
+- **No Verification Required**: Users can post and claim items immediately after selecting their role
 - **Session Management**: JWT tokens with secure authentication middleware
 
 ### Data Flow Architecture
 - **Item Lifecycle**: Available → Claimed → Delivered status progression
 - **Matching System**: Location and category-based matching for connecting donors with recipients
 - **Badge System**: Gamification with donation count-based badge levels (bronze, silver, gold)
-- **Admin Oversight**: Admin approval workflows for user verification and content moderation
+- **Instant Access**: Users can immediately post items and participate after role selection
+- **Admin Oversight**: Optional admin management for content moderation (verification removed)
 
 ## External Dependencies
 

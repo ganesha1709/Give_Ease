@@ -130,7 +130,7 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/register">
+                <Link href="/add-donation">
                   <Button size="lg" className="px-8 py-4 text-lg font-semibold">
                     <Plus className="mr-2 h-5 w-5" />
                     Start Donating
@@ -195,11 +195,11 @@ export default function Home() {
               <div className="w-20 h-20 bg-gradient-to-br from-primary to-emerald-400 rounded-full flex items-center justify-center mx-auto">
                 <UserCheck className="text-white text-2xl" />
               </div>
-              <h3 className="text-xl font-semibold">Get Verified</h3>
+              <h3 className="text-xl font-semibold">Join & Select Role</h3>
               <p className="text-neutral dark:text-gray-300">
-                Upload your ID for quick verification. Our secure process ensures all users are authentic and trustworthy.
+                Create your account and choose how you want to participate - as a donor, recipient, or NGO partner.
               </p>
-              <div className="text-sm text-primary font-medium">ID Verification • Admin Approval • Role Selection</div>
+              <div className="text-sm text-primary font-medium">Quick Signup • Instant Access • Role Selection</div>
             </div>
             
             <div className="text-center space-y-4">

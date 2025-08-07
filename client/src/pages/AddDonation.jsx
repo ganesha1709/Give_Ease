@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,9 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
+import { useAuth } from '@/contexts/AuthContext';
 import { Plus, Upload, X } from 'lucide-react';
 
 export default function AddDonation() {
+  const { user, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -23,6 +25,24 @@ export default function AddDonation() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation('/login');
+    }
+  }, [isAuthenticated, setLocation]);
+
+  // Redirect to register or role selection if user needs to select role
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'pending') {
+      toast({
+        title: 'Select Your Role',
+        description: 'Please select how you want to participate before adding donations.',
+      });
+      setLocation('/dashboard'); // Dashboard will show role selection
+    }
+  }, [isAuthenticated, user, setLocation, toast]);
 
   const createItemMutation = useMutation({
     mutationFn: async (itemData) => {

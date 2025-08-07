@@ -153,9 +153,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: 'Only donors and NGOs can create items' });
       }
       
-      if (user.status !== 'verified') {
-        return res.status(403).json({ message: 'User must be verified to create items' });
-      }
+      // Users can now create items immediately after selecting their role
       
       const itemData = insertItemSchema.parse(req.body);
       const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
@@ -247,9 +245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: 'Only recipients and NGOs can claim items' });
       }
       
-      if (user.status !== 'verified') {
-        return res.status(403).json({ message: 'User must be verified to claim items' });
-      }
+      // Users can now claim items immediately after selecting their role
       
       const item = await storage.claimItem(req.params.id, req.user.userId);
       if (!item) {

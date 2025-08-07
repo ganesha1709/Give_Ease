@@ -77,7 +77,7 @@ export class MemStorage implements IStorage {
       ...insertUser,
       id,
       role: "pending",
-      status: "unverified",
+      status: "verified",
       donationCount: 0,
       badgeLevel: "none",
       createdAt: new Date(),

@@ -51,24 +51,7 @@ export default function ProtectedRoute({ children, requiredRoles = [] }) {
     );
   }
 
-  // Check if user needs verification
-  if (user.status === 'unverified') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 p-4">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            <div className="text-center space-y-4">
-              <Clock className="h-12 w-12 text-orange-500 mx-auto" />
-              <h2 className="text-2xl font-bold">Verification Required</h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                Your account is pending verification. Please wait for admin approval to access all features.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Verification is now automatic - users can access features immediately
 
   // Check role permissions
   if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
