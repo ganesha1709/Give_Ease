@@ -16,6 +16,7 @@ export interface IStorage {
   updateItem(id: string, updates: Partial<Item>): Promise<Item | undefined>;
   deleteItem(id: string): Promise<boolean>;
   getItemsByDonor(donorId: string): Promise<Item[]>;
+  getItemsByRecipient(recipientId: string): Promise<Item[]>;
   getAvailableItems(): Promise<Item[]>;
   getItemsByCategory(category: string): Promise<Item[]>;
   claimItem(itemId: string, recipientId: string): Promise<Item | undefined>;
@@ -137,6 +138,10 @@ export class MemStorage implements IStorage {
 
   async getItemsByDonor(donorId: string): Promise<Item[]> {
     return Array.from(this.items.values()).filter(item => item.donorId === donorId);
+  }
+
+  async getItemsByRecipient(recipientId: string): Promise<Item[]> {
+    return Array.from(this.items.values()).filter(item => item.recipientId === recipientId);
   }
 
   async getAvailableItems(): Promise<Item[]> {

@@ -57,8 +57,12 @@ export default function AddDonation() {
         formData.append('image', itemData.image);
       }
 
+      const token = localStorage.getItem('token');
       const response = await fetch('/api/items', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
         body: formData,
       });
 

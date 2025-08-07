@@ -15,6 +15,10 @@ const upload = multer({
   dest: 'uploads/',
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
+    if (!file) {
+      return cb(null, true); // Allow no file
+    }
+    
     const allowedTypes = /jpeg|jpg|png|gif/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
@@ -229,6 +233,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
           
           return { ...item, recipient, deliveryProof };
+        })
+      );
+      
+      res.json(itemsWithDetails);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get('/api/items/my-received', authenticateToken, async (req: any, res) => {
+    try {
+      const items = await storage.getItemsByRecipient(req.user.userId);
+      
+      // Get donor information for each item
+      const itemsWithDetails = await Promise.all(
+        items.map(async (item) => {
+          let donor = null;
+          
+          if (item.donorId) {
+            const donorUser = await storage.getUser(item.donorId);
+            if (donorUser) {
+              donor = {
+                id: donorUser.id,
+                firstName: donorUser.firstName,
+                lastName: donorUser.lastName,
+                email: donorUser.email,
+                phone: donorUser.phone,
+              };
+            }
+          }
+          
+          return { ...item, donor };
         })
       );
       

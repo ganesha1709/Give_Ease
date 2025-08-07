@@ -23,8 +23,13 @@ export default function Browse() {
 
   const claimItemMutation = useMutation({
     mutationFn: async (itemId) => {
+      const token = localStorage.getItem('token');
       const response = await fetch(`/api/items/${itemId}/claim`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -37,8 +42,8 @@ export default function Browse() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/items'] });
       toast({
-        title: 'Item claimed successfully!',
-        description: 'The donor will be notified. Please arrange for pickup or delivery.',
+        title: 'Admin approved your request!',
+        description: 'Your order is on the way! The donor will contact you soon for delivery.',
       });
     },
     onError: (error) => {
@@ -68,7 +73,7 @@ export default function Browse() {
   });
 
   const handleClaimItem = (itemId) => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
       toast({
         title: 'Login required',
         description: 'Please log in to claim items.',
@@ -77,14 +82,7 @@ export default function Browse() {
       return;
     }
 
-    if (user?.status !== 'verified') {
-      toast({
-        title: 'Verification required',
-        description: 'Your account must be verified to claim items.',
-        variant: 'destructive',
-      });
-      return;
-    }
+    // No verification required - users can claim immediately
 
     if (user?.role !== 'recipient' && user?.role !== 'ngo') {
       toast({
@@ -228,14 +226,25 @@ export default function Browse() {
                       </div>
                     </div>
 
-                    {isAuthenticated && (user?.role === 'recipient' || user?.role === 'ngo') && user?.status === 'verified' ? (
+                    {item.status === 'claimed' ? (
+                      <Button size="sm" variant="secondary" disabled>
+                        <Heart className="mr-1 h-3 w-3" />
+                        Claimed
+                      </Button>
+                    ) : item.status === 'delivered' ? (
+                      <Button size="sm" variant="secondary" disabled>
+                        <Heart className="mr-1 h-3 w-3" />
+                        Delivered
+                      </Button>
+                    ) : isAuthenticated && (user?.role === 'recipient' || user?.role === 'ngo') ? (
                       <Button
                         size="sm"
                         onClick={() => handleClaimItem(item.id)}
                         disabled={claimItemMutation.isPending}
+                        className="bg-green-600 hover:bg-green-700"
                       >
                         <Heart className="mr-1 h-3 w-3" />
-                        {claimItemMutation.isPending ? 'Claiming...' : 'Claim'}
+                        {claimItemMutation.isPending ? 'Processing...' : 'Receive'}
                       </Button>
                     ) : (
                       <Button size="sm" variant="secondary" disabled>
@@ -270,7 +279,7 @@ export default function Browse() {
             Want to claim items?
           </h3>
           <p className="text-blue-800 dark:text-blue-200 mb-4">
-            Create an account and get verified to start claiming donations
+            Create an account to start receiving donations instantly
           </p>
           <Button>
             Get Started
