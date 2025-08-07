@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Search, Filter, Heart, MapPin, Calendar, User } from 'lucide-react';
+import { Search, Filter, Heart, MapPin, Calendar, User, X } from 'lucide-react';
 
 export default function Browse() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -142,17 +142,82 @@ export default function Browse() {
         </p>
       </div>
 
-      {/* Advanced Search and Filters */}
-      <SearchAndFilter
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
-        selectedCondition={selectedCondition}
-        setSelectedCondition={setSelectedCondition}
-      />
+      {/* Search and Filter */}
+      <div className="space-y-4">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search items by title or description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-4"
+          />
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="flex items-center space-x-2">
+            <Filter className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Filters:</span>
+          </div>
+          
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.value} value={category.value}>
+                  {category.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedCondition} onValueChange={setSelectedCondition}>
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any Condition</SelectItem>
+              <SelectItem value="new">New</SelectItem>
+              <SelectItem value="slightly_used">Slightly Used</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Locations</SelectItem>
+              <SelectItem value="bangalore">Bangalore</SelectItem>
+              <SelectItem value="mumbai">Mumbai</SelectItem>
+              <SelectItem value="delhi">Delhi</SelectItem>
+              <SelectItem value="hyderabad">Hyderabad</SelectItem>
+              <SelectItem value="pune">Pune</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {(searchTerm || selectedCategory !== 'all' || selectedLocation !== 'all' || selectedCondition !== 'all') && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setSelectedLocation('all');
+                setSelectedCondition('all');
+              }}
+              className="text-xs"
+            >
+              <X className="h-3 w-3 mr-1" />
+              Clear Filters
+            </Button>
+          )}
+        </div>
+      </div>
 
       {/* Items Grid */}
       {isLoading ? (
@@ -173,12 +238,94 @@ export default function Browse() {
       ) : filteredItems.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
-            <ItemCard
-              key={item.id}
-              item={item}
-              onClaim={handleClaimItem}
-              isClaimPending={claimItemMutation.isPending}
-            />
+            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
+              {item.imageUrl ? (
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="w-full h-48 object-cover"
+                />
+              ) : (
+                <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <span className="text-gray-400 text-sm">No image</span>
+                </div>
+              )}
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <Badge variant="secondary" className="capitalize">
+                    {item.category}
+                  </Badge>
+                  <Badge className="capitalize">
+                    {item.condition.replace('_', ' ')}
+                  </Badge>
+                </div>
+                
+                <h3 className="text-lg font-semibold mb-2 line-clamp-1">{item.title}</h3>
+                <p className="text-neutral dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                  {item.description}
+                </p>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>{formatDate(item.createdAt)}</span>
+                    </div>
+                    {item.location && (
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{item.location}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                        <User className="text-white text-xs" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          {item.donor ? `${item.donor.firstName} ${item.donor.lastName[0]}.` : 'Unknown'}
+                        </span>
+                        {item.donor?.badgeLevel !== 'none' && (
+                          <Badge size="sm" className={getBadgeColor(item.donor.badgeLevel)}>
+                            {item.donor.badgeLevel}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    {item.status === 'claimed' ? (
+                      <Button size="sm" variant="secondary" disabled>
+                        <Heart className="mr-1 h-3 w-3" />
+                        Claimed
+                      </Button>
+                    ) : item.status === 'delivered' ? (
+                      <Button size="sm" variant="secondary" disabled>
+                        <Heart className="mr-1 h-3 w-3" />
+                        Delivered
+                      </Button>
+                    ) : isAuthenticated && (user?.role === 'recipient' || user?.role === 'ngo') ? (
+                      <Button
+                        size="sm"
+                        onClick={() => handleClaimItem(item.id)}
+                        disabled={claimItemMutation.isPending}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <Heart className="mr-1 h-3 w-3" />
+                        {claimItemMutation.isPending ? 'Processing...' : 'Receive'}
+                      </Button>
+                    ) : (
+                      <Button size="sm" variant="secondary" disabled>
+                        <Heart className="mr-1 h-3 w-3" />
+                        Available
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       ) : (
